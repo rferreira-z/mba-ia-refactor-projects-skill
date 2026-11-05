@@ -20,7 +20,7 @@ needs it starts** — not all at once.
 | Phase | Reference files to read first |
 |---|---|
 | 1 — Analysis | `references/project-analysis.md` |
-| 2 — Audit | `references/anti-patterns-catalog.md`, `references/report-template.md` |
+| 2 — Audit | `references/anti-patterns-catalog.md`, `references/report-template.md`, `references/mvc-guidelines.md` (for the *Proposed target*) |
 | 3 — Refactor | `references/mvc-guidelines.md`, `references/refactoring-playbook.md`, `references/validation-protocol.md` |
 
 ## Arguments
@@ -83,7 +83,8 @@ Endpoints:     <N> routes (<files where they are declared>)
 
 ## PHASE 2 — Architecture Audit (read-only, ends with a confirmation gate)
 
-1. Read `references/anti-patterns-catalog.md` and `references/report-template.md`.
+1. Read `references/anti-patterns-catalog.md`, `references/report-template.md` and the
+   "Reference layouts" / "Strategy by starting point" sections of `references/mvc-guidelines.md`.
 2. Run the candidate scanner (fast, regex-based, may have false positives/negatives):
    `python3 ${CLAUDE_SKILL_DIR}/scripts/scan_antipatterns.py .`
 3. **Read every source file in full** and check it against every catalog entry that applies to the
@@ -96,7 +97,11 @@ Endpoints:     <N> routes (<files where they are declared>)
    - one finding per anti-pattern **per location cluster** (group repeated occurrences of the same
      problem in the same file into one finding listing all lines);
    - ordered CRITICAL → HIGH → MEDIUM → LOW, then by file;
-   - summary counts must match the findings list.
+   - summary counts must match the findings list;
+   - the *Architecture Notes → Proposed target* must be the layout from `references/mvc-guidelines.md`
+     ("Reference layouts" + "Strategy by starting point") for the detected stack and level — name its
+     `models/`, `views/` (or existing `routes/`), `controllers/`, `config/`, `middlewares/` folders.
+     Do not invent a different layering (e.g. repositories/schemas/infra) in the report.
 6. Print the full report, then save the same content to the report path (see Arguments) — creating
    the `reports/` folder if needed. This report file is the **only** file you may write before
    confirmation.
@@ -120,7 +125,10 @@ anything other than an explicit yes (`y`, `yes`, `s`, `sim`, "proceed"...), stop
    then stop the app and delete any database file the run created.
 3. Choose the strategy from the Phase 1 architecture level (mvc-guidelines §"Strategy by starting
    point"): full restructure for `MONOLITH`, in-place evolution for `PARTIALLY LAYERED`, targeted
-   fixes for `LAYERED`. Print the target directory tree before writing it.
+   fixes for `LAYERED`. The layer folders MUST be the ones in mvc-guidelines (`models/`,
+   `views/` or existing `routes/`, `controllers/`, `config/`, `middlewares/`, optional `services/`) —
+   the checklist reviewers use looks for exactly these MVC layers. Print the target tree before
+   writing it.
 4. Apply the transformations from the playbook, finding by finding, CRITICAL first. Every finding in
    the report must end up either **fixed** or **explicitly deferred with a reason**.
 5. Remove the files made obsolete by the restructure (old god modules) — no dead duplicates.
