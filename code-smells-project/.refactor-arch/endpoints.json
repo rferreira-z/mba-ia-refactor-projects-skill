@@ -1,0 +1,63 @@
+[
+  {"name": "index", "method": "GET", "path": "/"},
+  {"name": "health check", "method": "GET", "path": "/health"},
+
+  {"name": "list products", "method": "GET", "path": "/produtos"},
+  {"name": "search products by term", "method": "GET", "path": "/produtos/busca?q=Mouse"},
+  {"name": "search products by category and price range", "method": "GET", "path": "/produtos/busca?categoria=informatica&preco_min=100&preco_max=500"},
+  {"name": "search products no filters", "method": "GET", "path": "/produtos/busca"},
+  {"name": "get product by id", "method": "GET", "path": "/produtos/1"},
+  {"name": "get product not found", "method": "GET", "path": "/produtos/9999", "expect": 404},
+
+  {"name": "list users", "method": "GET", "path": "/usuarios"},
+  {"name": "get user by id", "method": "GET", "path": "/usuarios/2"},
+  {"name": "get user not found", "method": "GET", "path": "/usuarios/9999", "expect": 404},
+
+  {"name": "login success", "method": "POST", "path": "/login", "body": {"email": "joao@email.com", "senha": "123456"}, "expect": 200},
+  {"name": "login wrong password", "method": "POST", "path": "/login", "body": {"email": "joao@email.com", "senha": "errada"}, "expect": 401},
+  {"name": "login missing fields", "method": "POST", "path": "/login", "body": {"email": "joao@email.com"}, "expect": 400},
+  {"name": "login sql injection bypass", "method": "POST", "path": "/login", "body": {"email": "admin@loja.com' --", "senha": "qualquer"}, "expect": 401},
+
+  {"name": "create user", "method": "POST", "path": "/usuarios", "body": {"nome": "Teste Smoke", "email": "smoke@teste.com", "senha": "segredo123"}, "expect": 201},
+  {"name": "create user missing fields", "method": "POST", "path": "/usuarios", "body": {"nome": "Sem Email"}, "expect": 400},
+  {"name": "login as created user", "method": "POST", "path": "/login", "body": {"email": "smoke@teste.com", "senha": "segredo123"}, "expect": 200},
+  {"name": "create duplicate user", "method": "POST", "path": "/usuarios", "body": {"nome": "Outro Smoke", "email": "smoke@teste.com", "senha": "outrasenha"}, "expect": 409},
+
+  {"name": "create product", "method": "POST", "path": "/produtos", "body": {"nome": "Produto Smoke", "descricao": "criado pelo smoke test", "preco": 150.5, "estoque": 7, "categoria": "eletronicos"}, "expect": 201},
+  {"name": "create product missing name", "method": "POST", "path": "/produtos", "body": {"preco": 10, "estoque": 1}, "expect": 400},
+  {"name": "create product negative price", "method": "POST", "path": "/produtos", "body": {"nome": "Negativo", "preco": -5, "estoque": 1}, "expect": 400},
+  {"name": "create product invalid category", "method": "POST", "path": "/produtos", "body": {"nome": "Categoria Errada", "preco": 10, "estoque": 1, "categoria": "inexistente"}, "expect": 400},
+  {"name": "create product name too short", "method": "POST", "path": "/produtos", "body": {"nome": "X", "preco": 10, "estoque": 1}, "expect": 400},
+  {"name": "create product non numeric price", "method": "POST", "path": "/produtos", "body": {"nome": "Preco Texto", "preco": "abc", "estoque": 1}, "expect": 400},
+
+  {"name": "update product", "method": "PUT", "path": "/produtos/11", "body": {"nome": "Produto Smoke Atualizado", "descricao": "atualizado", "preco": 175.0, "estoque": 5, "categoria": "eletronicos"}, "expect": 200},
+  {"name": "update product not found", "method": "PUT", "path": "/produtos/9999", "body": {"nome": "Fantasma", "preco": 1, "estoque": 1}, "expect": 404},
+  {"name": "get updated product", "method": "GET", "path": "/produtos/11", "expect": 200},
+
+  {"name": "create order", "method": "POST", "path": "/pedidos", "body": {"usuario_id": 2, "itens": [{"produto_id": 1, "quantidade": 2}, {"produto_id": 2, "quantidade": 3}]}, "expect": 201},
+  {"name": "create order empty items", "method": "POST", "path": "/pedidos", "body": {"usuario_id": 2, "itens": []}, "expect": 400},
+  {"name": "create order missing user", "method": "POST", "path": "/pedidos", "body": {"itens": [{"produto_id": 1, "quantidade": 1}]}, "expect": 400},
+  {"name": "create order unknown product", "method": "POST", "path": "/pedidos", "body": {"usuario_id": 2, "itens": [{"produto_id": 9999, "quantidade": 1}]}, "expect": 400},
+  {"name": "create order insufficient stock", "method": "POST", "path": "/pedidos", "body": {"usuario_id": 2, "itens": [{"produto_id": 1, "quantidade": 9999}]}, "expect": 400},
+
+  {"name": "list all orders", "method": "GET", "path": "/pedidos"},
+  {"name": "list orders by user", "method": "GET", "path": "/pedidos/usuario/2"},
+  {"name": "update order status", "method": "PUT", "path": "/pedidos/1/status", "body": {"status": "aprovado"}, "expect": 200},
+  {"name": "update order status invalid", "method": "PUT", "path": "/pedidos/1/status", "body": {"status": "voando"}, "expect": 400},
+  {"name": "update status of unknown order", "method": "PUT", "path": "/pedidos/9999/status", "body": {"status": "aprovado"}, "expect": 404},
+
+  {"name": "sales report", "method": "GET", "path": "/relatorios/vendas"},
+
+  {"name": "delete product", "method": "DELETE", "path": "/produtos/11", "expect": 200},
+  {"name": "delete product not found", "method": "DELETE", "path": "/produtos/9999", "expect": 404},
+  {"name": "delete product referenced by an order", "method": "DELETE", "path": "/produtos/1", "expect": 409},
+
+  {"name": "admin query without token", "method": "POST", "path": "/admin/query", "body": {"sql": "SELECT id, nome FROM produtos"}, "expect": 403},
+  {"name": "admin query select with token", "method": "POST", "path": "/admin/query", "body": {"sql": "SELECT id, nome FROM produtos"}, "headers": {"X-Admin-Token": "smoke-admin-token"}, "expect": 200},
+  {"name": "admin query empty sql with token", "method": "POST", "path": "/admin/query", "body": {"sql": ""}, "headers": {"X-Admin-Token": "smoke-admin-token"}, "expect": 400},
+  {"name": "admin query non select with token", "method": "POST", "path": "/admin/query", "body": {"sql": "UPDATE produtos SET ativo = 1 WHERE id = 1"}, "headers": {"X-Admin-Token": "smoke-admin-token"}, "expect": 400},
+
+  {"name": "admin reset db without token", "method": "POST", "path": "/admin/reset-db", "expect": 403},
+  {"name": "admin reset db with token", "method": "POST", "path": "/admin/reset-db", "headers": {"X-Admin-Token": "smoke-admin-token"}, "expect": 200},
+  {"name": "list products after reset", "method": "GET", "path": "/produtos", "expect": 200}
+]

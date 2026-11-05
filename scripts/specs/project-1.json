@@ -1,35 +1,272 @@
 [
-  {"name": "index", "method": "GET", "path": "/"},
-  {"name": "health", "method": "GET", "path": "/health"},
-  {"name": "list products", "method": "GET", "path": "/produtos"},
-  {"name": "get product", "method": "GET", "path": "/produtos/1"},
-  {"name": "get missing product", "method": "GET", "path": "/produtos/999"},
-  {"name": "search by term", "method": "GET", "path": "/produtos/busca?q=Mouse"},
-  {"name": "search by category and price", "method": "GET", "path": "/produtos/busca?categoria=informatica&preco_min=100&preco_max=500"},
-  {"name": "search sql injection probe", "method": "GET", "path": "/produtos/busca?q=%27%20OR%201%3D1%20--"},
-  {"name": "create product", "method": "POST", "path": "/produtos", "body": {"nome": "Livro Clean Code", "descricao": "Robert C. Martin", "preco": 120.5, "estoque": 7, "categoria": "livros"}},
-  {"name": "create product missing name", "method": "POST", "path": "/produtos", "body": {"preco": 10, "estoque": 1}},
-  {"name": "create product invalid category", "method": "POST", "path": "/produtos", "body": {"nome": "X Produto", "preco": 10, "estoque": 1, "categoria": "naoexiste"}},
-  {"name": "update product", "method": "PUT", "path": "/produtos/11", "body": {"nome": "Livro Clean Code 2ed", "descricao": "Robert C. Martin", "preco": 130, "estoque": 5, "categoria": "livros"}},
-  {"name": "update missing product", "method": "PUT", "path": "/produtos/999", "body": {"nome": "Nada", "preco": 1, "estoque": 1}},
-  {"name": "delete product", "method": "DELETE", "path": "/produtos/11"},
-  {"name": "delete missing product", "method": "DELETE", "path": "/produtos/999"},
-  {"name": "list users", "method": "GET", "path": "/usuarios"},
-  {"name": "get user", "method": "GET", "path": "/usuarios/2"},
-  {"name": "get missing user", "method": "GET", "path": "/usuarios/999"},
-  {"name": "create user", "method": "POST", "path": "/usuarios", "body": {"nome": "Ana Lima", "email": "ana@email.com", "senha": "segredo1"}},
-  {"name": "create user missing fields", "method": "POST", "path": "/usuarios", "body": {"nome": "Sem Email"}},
-  {"name": "login ok", "method": "POST", "path": "/login", "body": {"email": "admin@loja.com", "senha": "admin123"}},
-  {"name": "login new user", "method": "POST", "path": "/login", "body": {"email": "ana@email.com", "senha": "segredo1"}},
-  {"name": "login wrong password", "method": "POST", "path": "/login", "body": {"email": "admin@loja.com", "senha": "errada"}},
-  {"name": "login sql injection probe", "method": "POST", "path": "/login", "body": {"email": "admin@loja.com' --", "senha": "x"}, "expect": 401},
-  {"name": "create order", "method": "POST", "path": "/pedidos", "body": {"usuario_id": 2, "itens": [{"produto_id": 1, "quantidade": 1}, {"produto_id": 2, "quantidade": 2}]}},
-  {"name": "create order no stock", "method": "POST", "path": "/pedidos", "body": {"usuario_id": 2, "itens": [{"produto_id": 6, "quantidade": 999}]}},
-  {"name": "create order missing product", "method": "POST", "path": "/pedidos", "body": {"usuario_id": 2, "itens": [{"produto_id": 999, "quantidade": 1}]}},
-  {"name": "create order empty", "method": "POST", "path": "/pedidos", "body": {"usuario_id": 2, "itens": []}},
-  {"name": "list orders", "method": "GET", "path": "/pedidos"},
-  {"name": "list user orders", "method": "GET", "path": "/pedidos/usuario/2"},
-  {"name": "update order status", "method": "PUT", "path": "/pedidos/1/status", "body": {"status": "aprovado"}},
-  {"name": "update order invalid status", "method": "PUT", "path": "/pedidos/1/status", "body": {"status": "voando"}},
-  {"name": "sales report", "method": "GET", "path": "/relatorios/vendas"}
+ {
+  "name": "index",
+  "method": "GET",
+  "path": "/"
+ },
+ {
+  "name": "health",
+  "method": "GET",
+  "path": "/health"
+ },
+ {
+  "name": "list products",
+  "method": "GET",
+  "path": "/produtos"
+ },
+ {
+  "name": "get product",
+  "method": "GET",
+  "path": "/produtos/1"
+ },
+ {
+  "name": "get missing product",
+  "method": "GET",
+  "path": "/produtos/999"
+ },
+ {
+  "name": "search by term",
+  "method": "GET",
+  "path": "/produtos/busca?q=Mouse"
+ },
+ {
+  "name": "search by category and price",
+  "method": "GET",
+  "path": "/produtos/busca?categoria=informatica&preco_min=100&preco_max=500"
+ },
+ {
+  "name": "search sql injection probe",
+  "method": "GET",
+  "path": "/produtos/busca?q=%27%20OR%201%3D1%20--",
+  "expect": 200
+ },
+ {
+  "name": "create product",
+  "method": "POST",
+  "path": "/produtos",
+  "body": {
+   "nome": "Livro Clean Code",
+   "descricao": "Robert C. Martin",
+   "preco": 120.5,
+   "estoque": 7,
+   "categoria": "livros"
+  }
+ },
+ {
+  "name": "create product missing name",
+  "method": "POST",
+  "path": "/produtos",
+  "body": {
+   "preco": 10,
+   "estoque": 1
+  }
+ },
+ {
+  "name": "create product invalid category",
+  "method": "POST",
+  "path": "/produtos",
+  "body": {
+   "nome": "X Produto",
+   "preco": 10,
+   "estoque": 1,
+   "categoria": "naoexiste"
+  }
+ },
+ {
+  "name": "update product",
+  "method": "PUT",
+  "path": "/produtos/11",
+  "body": {
+   "nome": "Livro Clean Code 2ed",
+   "descricao": "Robert C. Martin",
+   "preco": 130,
+   "estoque": 5,
+   "categoria": "livros"
+  }
+ },
+ {
+  "name": "update missing product",
+  "method": "PUT",
+  "path": "/produtos/999",
+  "body": {
+   "nome": "Nada",
+   "preco": 1,
+   "estoque": 1
+  }
+ },
+ {
+  "name": "delete product",
+  "method": "DELETE",
+  "path": "/produtos/11"
+ },
+ {
+  "name": "delete missing product",
+  "method": "DELETE",
+  "path": "/produtos/999"
+ },
+ {
+  "name": "list users",
+  "method": "GET",
+  "path": "/usuarios"
+ },
+ {
+  "name": "get user",
+  "method": "GET",
+  "path": "/usuarios/2"
+ },
+ {
+  "name": "get missing user",
+  "method": "GET",
+  "path": "/usuarios/999"
+ },
+ {
+  "name": "create user",
+  "method": "POST",
+  "path": "/usuarios",
+  "body": {
+   "nome": "Ana Lima",
+   "email": "ana@email.com",
+   "senha": "segredo1"
+  }
+ },
+ {
+  "name": "create user missing fields",
+  "method": "POST",
+  "path": "/usuarios",
+  "body": {
+   "nome": "Sem Email"
+  }
+ },
+ {
+  "name": "login ok",
+  "method": "POST",
+  "path": "/login",
+  "body": {
+   "email": "admin@loja.com",
+   "senha": "admin123"
+  }
+ },
+ {
+  "name": "login new user",
+  "method": "POST",
+  "path": "/login",
+  "body": {
+   "email": "ana@email.com",
+   "senha": "segredo1"
+  }
+ },
+ {
+  "name": "login wrong password",
+  "method": "POST",
+  "path": "/login",
+  "body": {
+   "email": "admin@loja.com",
+   "senha": "errada"
+  }
+ },
+ {
+  "name": "login sql injection probe",
+  "method": "POST",
+  "path": "/login",
+  "body": {
+   "email": "admin@loja.com' --",
+   "senha": "x"
+  },
+  "expect": 401
+ },
+ {
+  "name": "create order",
+  "method": "POST",
+  "path": "/pedidos",
+  "body": {
+   "usuario_id": 2,
+   "itens": [
+    {
+     "produto_id": 1,
+     "quantidade": 1
+    },
+    {
+     "produto_id": 2,
+     "quantidade": 2
+    }
+   ]
+  }
+ },
+ {
+  "name": "create order no stock",
+  "method": "POST",
+  "path": "/pedidos",
+  "body": {
+   "usuario_id": 2,
+   "itens": [
+    {
+     "produto_id": 6,
+     "quantidade": 999
+    }
+   ]
+  }
+ },
+ {
+  "name": "create order missing product",
+  "method": "POST",
+  "path": "/pedidos",
+  "body": {
+   "usuario_id": 2,
+   "itens": [
+    {
+     "produto_id": 999,
+     "quantidade": 1
+    }
+   ]
+  }
+ },
+ {
+  "name": "create order empty",
+  "method": "POST",
+  "path": "/pedidos",
+  "body": {
+   "usuario_id": 2,
+   "itens": []
+  }
+ },
+ {
+  "name": "list orders",
+  "method": "GET",
+  "path": "/pedidos"
+ },
+ {
+  "name": "list user orders",
+  "method": "GET",
+  "path": "/pedidos/usuario/2"
+ },
+ {
+  "name": "update order status",
+  "method": "PUT",
+  "path": "/pedidos/1/status",
+  "body": {
+   "status": "aprovado"
+  }
+ },
+ {
+  "name": "update order invalid status",
+  "method": "PUT",
+  "path": "/pedidos/1/status",
+  "body": {
+   "status": "voando"
+  }
+ },
+ {
+  "name": "sales report",
+  "method": "GET",
+  "path": "/relatorios/vendas"
+ },
+ {
+  "name": "admin query without token",
+  "method": "POST",
+  "path": "/admin/query",
+  "body": {
+   "sql": "SELECT 1"
+  },
+  "expect": 403
+ }
 ]

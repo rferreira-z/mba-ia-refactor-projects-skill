@@ -1,0 +1,36 @@
+  ✓ 200 GET    /                                        index
+  ✓ 200 GET    /health                                  health  keys +[] -['ambiente', 'db_path', 'debug', 'secret_key']
+  ✓ 200 GET    /produtos                                list products
+  ✓ 200 GET    /produtos/1                              get product
+  ✓ 404 GET    /produtos/999                            get missing product
+  ✓ 200 GET    /produtos/busca?q=Mouse                  search by term
+  ✓ 200 GET    /produtos/busca?categoria=informatica&preco_min=100&preco_max=500 search by category and price
+  ✓ 200 GET    /produtos/busca?q=%27%20OR%201%3D1%20--  search sql injection probe  keys +['dados', 'sucesso', 'total'] -['erro']
+  ✓ 201 POST   /produtos                                create product
+  ✓ 400 POST   /produtos                                create product missing name  keys +['sucesso'] -[]
+  ✓ 400 POST   /produtos                                create product invalid category  keys +['sucesso'] -[]
+  ✓ 200 PUT    /produtos/11                             update product
+  ✓ 404 PUT    /produtos/999                            update missing product  keys +['sucesso'] -[]
+  ✓ 200 DELETE /produtos/11                             delete product
+  ✓ 404 DELETE /produtos/999                            delete missing product  keys +['sucesso'] -[]
+  ✓ 200 GET    /usuarios                                list users
+  ✓ 200 GET    /usuarios/2                              get user
+  ✓ 404 GET    /usuarios/999                            get missing user  keys +['sucesso'] -[]
+  ✓ 201 POST   /usuarios                                create user
+  ✓ 400 POST   /usuarios                                create user missing fields  keys +['sucesso'] -[]
+  ✓ 200 POST   /login                                   login ok
+  ✓ 200 POST   /login                                   login new user
+  ✓ 401 POST   /login                                   login wrong password
+  ✓ 401 POST   /login                                   login sql injection probe  keys +['erro'] -['dados', 'mensagem']
+  ✓ 201 POST   /pedidos                                 create order
+  ✓ 400 POST   /pedidos                                 create order no stock
+  ✓ 400 POST   /pedidos                                 create order missing product
+  ✓ 400 POST   /pedidos                                 create order empty  keys +['sucesso'] -[]
+  ✓ 200 GET    /pedidos                                 list orders
+  ✓ 200 GET    /pedidos/usuario/2                       list user orders
+  ✓ 200 PUT    /pedidos/1/status                        update order status
+  ✓ 400 PUT    /pedidos/1/status                        update order invalid status  keys +['sucesso'] -[]
+  ✓ 200 GET    /relatorios/vendas                       sales report
+  ✓ 403 POST   /admin/query                             admin query without token
+
+34/34 requests OK
