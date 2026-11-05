@@ -1,11 +1,96 @@
 [
-  {"name": "financial report (seed)", "method": "GET", "path": "/api/admin/financial-report"},
-  {"name": "checkout success (new user)", "method": "POST", "path": "/api/checkout", "body": {"usr": "Guilherme", "eml": "gui@fullcycle.com.br", "pwd": "senhaforte", "c_id": 2, "card": "4111222233334444"}},
-  {"name": "checkout success (existing user)", "method": "POST", "path": "/api/checkout", "body": {"usr": "Leonan", "eml": "leonan@fullcycle.com.br", "pwd": "123", "c_id": 2, "card": "4111222233334444"}},
-  {"name": "checkout payment denied", "method": "POST", "path": "/api/checkout", "body": {"usr": "João", "eml": "joao@teste.com", "pwd": "123", "c_id": 1, "card": "5111222233334444"}},
-  {"name": "checkout missing fields", "method": "POST", "path": "/api/checkout", "body": {"usr": "Sem curso"}},
-  {"name": "checkout unknown course", "method": "POST", "path": "/api/checkout", "body": {"usr": "Ana", "eml": "ana@teste.com", "pwd": "123", "c_id": 999, "card": "4111222233334444"}},
-  {"name": "financial report (after checkouts)", "method": "GET", "path": "/api/admin/financial-report"},
-  {"name": "delete user", "method": "DELETE", "path": "/api/users/1"},
-  {"name": "financial report (after delete)", "method": "GET", "path": "/api/admin/financial-report"}
+ {
+  "name": "financial report (seed)",
+  "method": "GET",
+  "path": "/api/admin/financial-report",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "financial report without admin token",
+  "method": "GET",
+  "path": "/api/admin/financial-report",
+  "expect": 403
+ },
+ {
+  "name": "checkout success (new user)",
+  "method": "POST",
+  "path": "/api/checkout",
+  "body": {
+   "usr": "Guilherme",
+   "eml": "gui@fullcycle.com.br",
+   "pwd": "senhaforte",
+   "c_id": 2,
+   "card": "4111222233334444"
+  }
+ },
+ {
+  "name": "checkout success (existing user)",
+  "method": "POST",
+  "path": "/api/checkout",
+  "body": {
+   "usr": "Leonan",
+   "eml": "leonan@fullcycle.com.br",
+   "pwd": "123",
+   "c_id": 2,
+   "card": "4111222233334444"
+  }
+ },
+ {
+  "name": "checkout payment denied",
+  "method": "POST",
+  "path": "/api/checkout",
+  "body": {
+   "usr": "João",
+   "eml": "joao@teste.com",
+   "pwd": "123",
+   "c_id": 1,
+   "card": "5111222233334444"
+  }
+ },
+ {
+  "name": "checkout missing fields",
+  "method": "POST",
+  "path": "/api/checkout",
+  "body": {
+   "usr": "Sem curso"
+  }
+ },
+ {
+  "name": "checkout unknown course",
+  "method": "POST",
+  "path": "/api/checkout",
+  "body": {
+   "usr": "Ana",
+   "eml": "ana@teste.com",
+   "pwd": "123",
+   "c_id": 999,
+   "card": "4111222233334444"
+  }
+ },
+ {
+  "name": "financial report (after checkouts)",
+  "method": "GET",
+  "path": "/api/admin/financial-report",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "delete user",
+  "method": "DELETE",
+  "path": "/api/users/1",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "financial report (after delete)",
+  "method": "GET",
+  "path": "/api/admin/financial-report",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ }
 ]

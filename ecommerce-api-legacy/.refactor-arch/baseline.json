@@ -1,0 +1,121 @@
+[
+  {
+    "name": "checkout bad request",
+    "method": "POST",
+    "path": "/api/checkout",
+    "status": 400,
+    "body": "Bad Request"
+  },
+  {
+    "name": "checkout course not found",
+    "method": "POST",
+    "path": "/api/checkout",
+    "status": 404,
+    "body": "Curso não encontrado"
+  },
+  {
+    "name": "checkout payment denied",
+    "method": "POST",
+    "path": "/api/checkout",
+    "status": 400,
+    "body": "Pagamento recusado"
+  },
+  {
+    "name": "checkout new user success",
+    "method": "POST",
+    "path": "/api/checkout",
+    "status": 200,
+    "body": {
+      "msg": "Sucesso",
+      "enrollment_id": 2
+    }
+  },
+  {
+    "name": "checkout existing user success",
+    "method": "POST",
+    "path": "/api/checkout",
+    "status": 200,
+    "body": {
+      "msg": "Sucesso",
+      "enrollment_id": 3
+    }
+  },
+  {
+    "name": "financial report with admin token",
+    "method": "GET",
+    "path": "/api/admin/financial-report",
+    "status": 200,
+    "body": [
+      {
+        "course": "Docker",
+        "revenue": 497,
+        "students": [
+          {
+            "student": "Guilherme",
+            "paid": 497
+          }
+        ]
+      },
+      {
+        "course": "Clean Architecture",
+        "revenue": 1994,
+        "students": [
+          {
+            "student": "Leonan",
+            "paid": 997
+          },
+          {
+            "student": "Leonan",
+            "paid": 997
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "financial report without admin token",
+    "method": "GET",
+    "path": "/api/admin/financial-report",
+    "status": 200,
+    "body": [
+      {
+        "course": "Clean Architecture",
+        "revenue": 1994,
+        "students": [
+          {
+            "student": "Leonan",
+            "paid": 997
+          },
+          {
+            "student": "Leonan",
+            "paid": 997
+          }
+        ]
+      },
+      {
+        "course": "Docker",
+        "revenue": 497,
+        "students": [
+          {
+            "student": "Guilherme",
+            "paid": 497
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "delete user without admin token",
+    "method": "DELETE",
+    "path": "/api/users/2",
+    "status": 200,
+    "body": "Usuário deletado, mas as matrículas e pagamentos ficaram sujos no banco."
+  },
+  {
+    "name": "delete user with admin token",
+    "method": "DELETE",
+    "path": "/api/users/2",
+    "status": 200,
+    "body": "Usuário deletado, mas as matrículas e pagamentos ficaram sujos no banco."
+  }
+]
