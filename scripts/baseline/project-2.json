@@ -1,0 +1,137 @@
+[
+  {
+    "name": "financial report (seed)",
+    "method": "GET",
+    "path": "/api/admin/financial-report",
+    "status": 200,
+    "body": [
+      {
+        "course": "Docker",
+        "revenue": 0,
+        "students": []
+      },
+      {
+        "course": "Clean Architecture",
+        "revenue": 997,
+        "students": [
+          {
+            "student": "Leonan",
+            "paid": 997
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "checkout success (new user)",
+    "method": "POST",
+    "path": "/api/checkout",
+    "status": 200,
+    "body": {
+      "msg": "Sucesso",
+      "enrollment_id": 2
+    }
+  },
+  {
+    "name": "checkout success (existing user)",
+    "method": "POST",
+    "path": "/api/checkout",
+    "status": 200,
+    "body": {
+      "msg": "Sucesso",
+      "enrollment_id": 3
+    }
+  },
+  {
+    "name": "checkout payment denied",
+    "method": "POST",
+    "path": "/api/checkout",
+    "status": 400,
+    "body": "Pagamento recusado"
+  },
+  {
+    "name": "checkout missing fields",
+    "method": "POST",
+    "path": "/api/checkout",
+    "status": 400,
+    "body": "Bad Request"
+  },
+  {
+    "name": "checkout unknown course",
+    "method": "POST",
+    "path": "/api/checkout",
+    "status": 404,
+    "body": "Curso não encontrado"
+  },
+  {
+    "name": "financial report (after checkouts)",
+    "method": "GET",
+    "path": "/api/admin/financial-report",
+    "status": 200,
+    "body": [
+      {
+        "course": "Clean Architecture",
+        "revenue": 997,
+        "students": [
+          {
+            "student": "Leonan",
+            "paid": 997
+          }
+        ]
+      },
+      {
+        "course": "Docker",
+        "revenue": 994,
+        "students": [
+          {
+            "student": "Guilherme",
+            "paid": 497
+          },
+          {
+            "student": "Leonan",
+            "paid": 497
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "delete user",
+    "method": "DELETE",
+    "path": "/api/users/1",
+    "status": 200,
+    "body": "Usuário deletado, mas as matrículas e pagamentos ficaram sujos no banco."
+  },
+  {
+    "name": "financial report (after delete)",
+    "method": "GET",
+    "path": "/api/admin/financial-report",
+    "status": 200,
+    "body": [
+      {
+        "course": "Clean Architecture",
+        "revenue": 997,
+        "students": [
+          {
+            "student": "Unknown",
+            "paid": 997
+          }
+        ]
+      },
+      {
+        "course": "Docker",
+        "revenue": 994,
+        "students": [
+          {
+            "student": "Guilherme",
+            "paid": 497
+          },
+          {
+            "student": "Unknown",
+            "paid": 497
+          }
+        ]
+      }
+    ]
+  }
+]

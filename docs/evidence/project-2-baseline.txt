@@ -1,0 +1,11 @@
+  ✓ 200 GET    /api/admin/financial-report              financial report (seed)
+  ✓ 200 POST   /api/checkout                            checkout success (new user)
+  ✓ 200 POST   /api/checkout                            checkout success (existing user)
+  ✓ 400 POST   /api/checkout                            checkout payment denied
+  ✓ 400 POST   /api/checkout                            checkout missing fields
+  ✓ 404 POST   /api/checkout                            checkout unknown course
+  ✓ 200 GET    /api/admin/financial-report              financial report (after checkouts)
+  ✓ 200 DELETE /api/users/1                             delete user
+  ✓ 200 GET    /api/admin/financial-report              financial report (after delete)
+
+9/9 requests OK
