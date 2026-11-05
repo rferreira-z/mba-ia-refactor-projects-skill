@@ -1,0 +1,89 @@
+[
+  {"name": "index", "method": "GET", "path": "/"},
+  {"name": "health", "method": "GET", "path": "/health"},
+
+  {"name": "list tasks", "method": "GET", "path": "/tasks"},
+  {"name": "get task", "method": "GET", "path": "/tasks/1"},
+  {"name": "get task not found", "method": "GET", "path": "/tasks/9999", "expect": 404},
+  {"name": "search tasks by text", "method": "GET", "path": "/tasks/search?q=bug"},
+  {"name": "search tasks by filters", "method": "GET", "path": "/tasks/search?status=pending&priority=1&user_id=1"},
+  {"name": "search tasks bad priority type", "method": "GET", "path": "/tasks/search?priority=alta", "expect": 400},
+  {"name": "task stats", "method": "GET", "path": "/tasks/stats"},
+  {"name": "list categories", "method": "GET", "path": "/categories"},
+
+  {"name": "list users", "method": "GET", "path": "/users", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}},
+  {"name": "get user", "method": "GET", "path": "/users/1", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}},
+  {"name": "get user not found", "method": "GET", "path": "/users/9999", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "expect": 404},
+  {"name": "get user tasks", "method": "GET", "path": "/users/1/tasks", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}},
+  {"name": "report summary", "method": "GET", "path": "/reports/summary", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}},
+  {"name": "report user", "method": "GET", "path": "/reports/user/1", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}},
+  {"name": "report user not found", "method": "GET", "path": "/reports/user/9999", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "expect": 404},
+
+  {"name": "list users without token", "method": "GET", "path": "/users", "expect": 401},
+  {"name": "report summary without token", "method": "GET", "path": "/reports/summary", "expect": 401},
+
+  {"name": "login ok", "method": "POST", "path": "/login", "body": {"email": "joao@email.com", "password": "1234"}},
+  {"name": "login wrong password", "method": "POST", "path": "/login", "body": {"email": "joao@email.com", "password": "errada"}, "expect": 401},
+  {"name": "login unknown email", "method": "POST", "path": "/login", "body": {"email": "ninguem@email.com", "password": "1234"}, "expect": 401},
+  {"name": "login missing fields", "method": "POST", "path": "/login", "body": {"email": "joao@email.com"}, "expect": 400},
+
+  {"name": "create user", "method": "POST", "path": "/users", "body": {"name": "Ana Souza", "email": "ana@email.com", "password": "senha123", "role": "user"}, "expect": 201},
+  {"name": "create user duplicate email", "method": "POST", "path": "/users", "body": {"name": "Ana Dup", "email": "ana@email.com", "password": "senha123"}, "expect": 409},
+  {"name": "create user invalid email", "method": "POST", "path": "/users", "body": {"name": "Bad", "email": "nao-e-email", "password": "senha123"}, "expect": 400},
+  {"name": "create user short password", "method": "POST", "path": "/users", "body": {"name": "Bad", "email": "bad@email.com", "password": "ab"}, "expect": 400},
+  {"name": "create user missing name", "method": "POST", "path": "/users", "body": {"email": "bad2@email.com", "password": "senha123"}, "expect": 400},
+  {"name": "create user invalid role", "method": "POST", "path": "/users", "body": {"name": "Bad", "email": "bad3@email.com", "password": "senha123", "role": "root"}, "expect": 400},
+  {"name": "signup self assigning admin", "method": "POST", "path": "/users", "body": {"name": "Escalada", "email": "escalada@email.com", "password": "senha123", "role": "admin"}, "expect": 201},
+
+  {"name": "create task", "method": "POST", "path": "/tasks", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"title": "Task criada pelo smoke", "description": "validacao", "status": "pending", "priority": 2, "user_id": 1, "category_id": 1, "due_date": "2026-12-01", "tags": ["smoke", "test"]}, "expect": 201},
+  {"name": "create task missing title", "method": "POST", "path": "/tasks", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"description": "sem titulo"}, "expect": 400},
+  {"name": "create task short title", "method": "POST", "path": "/tasks", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"title": "ab"}, "expect": 400},
+  {"name": "create task invalid status", "method": "POST", "path": "/tasks", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"title": "Status invalido", "status": "arquivada"}, "expect": 400},
+  {"name": "create task invalid priority range", "method": "POST", "path": "/tasks", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"title": "Prioridade invalida", "priority": 9}, "expect": 400},
+  {"name": "create task invalid priority type", "method": "POST", "path": "/tasks", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"title": "Prioridade texto", "priority": "alta"}, "expect": 400},
+  {"name": "create task bad date format", "method": "POST", "path": "/tasks", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"title": "Data invalida", "due_date": "01/12/2026"}, "expect": 400},
+  {"name": "create task user not found", "method": "POST", "path": "/tasks", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"title": "Usuario inexistente", "user_id": 9999}, "expect": 404},
+  {"name": "create task category not found", "method": "POST", "path": "/tasks", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"title": "Categoria inexistente", "category_id": 9999}, "expect": 404},
+  {"name": "create task without token", "method": "POST", "path": "/tasks", "body": {}, "expect": 401},
+
+  {"name": "create category", "method": "POST", "path": "/categories", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"name": "Smoke", "description": "categoria de validacao", "color": "#123456"}, "expect": 201},
+  {"name": "create category missing name", "method": "POST", "path": "/categories", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"description": "sem nome"}, "expect": 400},
+  {"name": "create category without token", "method": "POST", "path": "/categories", "body": {}, "expect": 401},
+
+  {"name": "create task in smoke category", "method": "POST", "path": "/tasks", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"title": "Task da categoria smoke", "category_id": 5, "user_id": 2}, "expect": 201},
+
+  {"name": "update task", "method": "PUT", "path": "/tasks/11", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"title": "Task atualizada pelo smoke", "status": "in_progress", "priority": 1, "tags": ["smoke"]}, "expect": 200},
+  {"name": "update task invalid status", "method": "PUT", "path": "/tasks/11", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"status": "arquivada"}, "expect": 400},
+  {"name": "update task null title", "method": "PUT", "path": "/tasks/11", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"title": null}, "expect": 400},
+  {"name": "update task not found", "method": "PUT", "path": "/tasks/9999", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"title": "Nao existe"}, "expect": 404},
+  {"name": "update task without token", "method": "PUT", "path": "/tasks/9999", "body": {"title": "Nao existe"}, "expect": 401},
+
+  {"name": "update user", "method": "PUT", "path": "/users/4", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"name": "Ana Souza Atualizada", "active": true}, "expect": 200},
+  {"name": "update user invalid email", "method": "PUT", "path": "/users/4", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"email": "nao-e-email"}, "expect": 400},
+  {"name": "update user duplicate email", "method": "PUT", "path": "/users/4", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"email": "joao@email.com"}, "expect": 409},
+  {"name": "update user not found", "method": "PUT", "path": "/users/9999", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"name": "Nao existe"}, "expect": 404},
+  {"name": "update user without token", "method": "PUT", "path": "/users/9999", "body": {"name": "Nao existe"}, "expect": 401},
+
+  {"name": "update category", "method": "PUT", "path": "/categories/5", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"name": "Smoke Atualizada", "color": "#abcdef"}, "expect": 200},
+  {"name": "update category null name", "method": "PUT", "path": "/categories/5", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"name": null}, "expect": 400},
+  {"name": "update category not found", "method": "PUT", "path": "/categories/9999", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "body": {"name": "Nao existe"}, "expect": 404},
+  {"name": "update category without token", "method": "PUT", "path": "/categories/9999", "body": {"name": "Nao existe"}, "expect": 401},
+
+  {"name": "delete category", "method": "DELETE", "path": "/categories/5", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "expect": 200},
+  {"name": "get task of deleted category", "method": "GET", "path": "/tasks/12"},
+  {"name": "delete category not found", "method": "DELETE", "path": "/categories/9999", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "expect": 404},
+  {"name": "delete category without token", "method": "DELETE", "path": "/categories/9999", "expect": 401},
+
+  {"name": "delete task", "method": "DELETE", "path": "/tasks/12", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "expect": 200},
+  {"name": "delete task not found", "method": "DELETE", "path": "/tasks/9999", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "expect": 404},
+  {"name": "delete task without token", "method": "DELETE", "path": "/tasks/9999", "expect": 401},
+
+  {"name": "delete user", "method": "DELETE", "path": "/users/5", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "expect": 200},
+  {"name": "delete user not found", "method": "DELETE", "path": "/users/9999", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}, "expect": 404},
+  {"name": "delete user without token", "method": "DELETE", "path": "/users/9999", "expect": 401},
+
+  {"name": "task stats after changes", "method": "GET", "path": "/tasks/stats"},
+  {"name": "report summary after changes", "method": "GET", "path": "/reports/summary", "headers": {"X-Admin-Token": "dev-admin-token-change-me"}},
+  {"name": "list tasks after changes", "method": "GET", "path": "/tasks"},
+  {"name": "list categories after changes", "method": "GET", "path": "/categories"}
+]

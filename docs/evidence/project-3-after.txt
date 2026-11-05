@@ -1,0 +1,47 @@
+  ✓ 200 GET    /                                        index
+  ✓ 200 GET    /health                                  health
+  ✓ 200 GET    /tasks                                   list tasks
+  ✓ 200 GET    /tasks/1                                 get task
+  ✓ 404 GET    /tasks/999                               get missing task
+  ✓ 200 GET    /tasks/search?q=login&status=in_progress search tasks
+  ✓ 200 GET    /tasks/search?priority=1&user_id=1       search by priority and user
+  ✓ 200 GET    /tasks/stats                             task stats
+  ✓ 201 POST   /tasks                                   create task
+  ✓ 401 POST   /tasks                                   create task anonymous
+  ✓ 400 POST   /tasks                                   create task short title
+  ✓ 400 POST   /tasks                                   create task bad status
+  ✓ 400 POST   /tasks                                   create task bad priority
+  ✓ 404 POST   /tasks                                   create task unknown user
+  ✓ 400 POST   /tasks                                   create task bad date
+  ✓ 200 PUT    /tasks/11                                update task
+  ✓ 400 PUT    /tasks/11                                update task bad status
+  ✓ 404 PUT    /tasks/999                               update missing task
+  ✓ 200 DELETE /tasks/11                                delete task
+  ✓ 404 DELETE /tasks/999                               delete missing task
+  ✓ 200 GET    /users                                   list users
+  ✓ 200 GET    /users/1                                 get user  keys +[] -['password']
+  ✓ 404 GET    /users/999                               get missing user
+  ✓ 201 POST   /users                                   create user  keys +[] -['password']
+  ✓ 409 POST   /users                                   create user duplicate email
+  ✓ 400 POST   /users                                   create user bad email
+  ✓ 400 POST   /users                                   create user bad role
+  ✓ 200 PUT    /users/4                                 update user  keys +[] -['password']
+  ✓ 200 GET    /users/1/tasks                           user tasks
+  ✓ 200 POST   /login                                   login ok
+  ✓ 200 POST   /login                                   login new user
+  ✓ 401 POST   /login                                   login wrong password
+  ✓ 200 DELETE /users/4                                 delete user
+  ✓ 404 DELETE /users/999                               delete missing user
+  ✓ 401 DELETE /users/1                                 delete user anonymous
+  ✓ 200 GET    /reports/summary                         summary report
+  ✓ 200 GET    /reports/user/1                          user report
+  ✓ 404 GET    /reports/user/999                        missing user report
+  ✓ 200 GET    /categories                              list categories
+  ✓ 201 POST   /categories                              create category
+  ✓ 400 POST   /categories                              create category no name
+  ✓ 200 PUT    /categories/5                            update category
+  ✓ 404 PUT    /categories/999                          update missing category
+  ✓ 200 DELETE /categories/5                            delete category
+  ✓ 404 DELETE /categories/999                          delete missing category
+
+45/45 requests OK

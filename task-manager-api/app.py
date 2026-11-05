@@ -1,34 +1,67 @@
+"""Composition root e entry point da aplicação.
+
+É o único lugar onde as dependências concretas são montadas: configuração,
+banco, serviços, blueprints e middlewares. Não contém rota nem regra de negócio.
+"""
+import logging
+
+from dotenv import load_dotenv
 from flask import Flask
 from flask_cors import CORS
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
+
+from config.settings import Settings
 from database import db
+from middlewares.error_handler import register_error_handlers
+from routes.auth_routes import auth_bp
+from routes.category_routes import category_bp
+from routes.health_routes import health_bp
+from routes.report_routes import report_bp
 from routes.task_routes import task_bp
 from routes.user_routes import user_bp
-from routes.report_routes import report_bp
-import os, sys, json, datetime
+from services.notification_service import NotificationService
 
-app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tasks.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'super-secret-key-123'
+@event.listens_for(Engine, 'connect')
+def _enable_sqlite_foreign_keys(dbapi_connection, _connection_record):
+    """O SQLite ignora chaves estrangeiras por padrão; aqui elas passam a valer."""
+    if dbapi_connection.__class__.__module__.startswith('sqlite3'):
+        cursor = dbapi_connection.cursor()
+        cursor.execute('PRAGMA foreign_keys=ON')
+        cursor.close()
 
-CORS(app)
-db.init_app(app)
 
-app.register_blueprint(task_bp)
-app.register_blueprint(user_bp)
-app.register_blueprint(report_bp)
+def create_app(settings=None):
+    load_dotenv()  # lê um .env local, se existir (nunca sobrescreve o ambiente)
+    settings = settings or Settings()
 
-@app.route('/health')
-def health():
-    return {'status': 'ok', 'timestamp': str(datetime.datetime.now())}
+    app = Flask(__name__)
+    app.config.from_object(settings)
+    app.config['SETTINGS'] = settings
+    logging.basicConfig(level=settings.LOG_LEVEL)
 
-@app.route('/')
-def index():
-    return {'message': 'Task Manager API', 'version': '1.0'}
+    CORS(app, origins=settings.CORS_ORIGINS)
+    db.init_app(app)
 
-with app.app_context():
-    db.create_all()
+    app.extensions['notifier'] = NotificationService(settings)
+
+    for blueprint in (health_bp, auth_bp, task_bp, user_bp, category_bp, report_bp):
+        app.register_blueprint(blueprint)
+
+    register_error_handlers(app)
+
+    with app.app_context():
+        import models  # noqa: F401  (registra os models antes do create_all)
+
+        db.create_all()
+
+    return app
+
+
+app = create_app()
+
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    settings = app.config['SETTINGS']
+    app.run(host=settings.HOST, port=settings.PORT, debug=settings.DEBUG)

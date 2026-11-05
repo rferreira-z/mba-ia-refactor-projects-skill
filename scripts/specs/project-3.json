@@ -1,45 +1,455 @@
 [
-  {"name": "index", "method": "GET", "path": "/"},
-  {"name": "health", "method": "GET", "path": "/health"},
-  {"name": "list tasks", "method": "GET", "path": "/tasks"},
-  {"name": "get task", "method": "GET", "path": "/tasks/1"},
-  {"name": "get missing task", "method": "GET", "path": "/tasks/999"},
-  {"name": "search tasks", "method": "GET", "path": "/tasks/search?q=login&status=in_progress"},
-  {"name": "search by priority and user", "method": "GET", "path": "/tasks/search?priority=1&user_id=1"},
-  {"name": "task stats", "method": "GET", "path": "/tasks/stats"},
-  {"name": "create task", "method": "POST", "path": "/tasks", "body": {"title": "Nova task de teste", "description": "via smoke", "priority": 2, "user_id": 1, "category_id": 1, "due_date": "2030-01-15", "tags": ["smoke", "test"]}},
-  {"name": "create task short title", "method": "POST", "path": "/tasks", "body": {"title": "ab"}},
-  {"name": "create task bad status", "method": "POST", "path": "/tasks", "body": {"title": "Status ruim", "status": "flying"}},
-  {"name": "create task bad priority", "method": "POST", "path": "/tasks", "body": {"title": "Prioridade ruim", "priority": 9}},
-  {"name": "create task unknown user", "method": "POST", "path": "/tasks", "body": {"title": "Usuario inexistente", "user_id": 999}},
-  {"name": "create task bad date", "method": "POST", "path": "/tasks", "body": {"title": "Data ruim", "due_date": "31-31-2030"}},
-  {"name": "update task", "method": "PUT", "path": "/tasks/11", "body": {"status": "done", "priority": 1, "tags": "a,b"}},
-  {"name": "update task bad status", "method": "PUT", "path": "/tasks/11", "body": {"status": "flying"}},
-  {"name": "update missing task", "method": "PUT", "path": "/tasks/999", "body": {"status": "done"}},
-  {"name": "delete task", "method": "DELETE", "path": "/tasks/11"},
-  {"name": "delete missing task", "method": "DELETE", "path": "/tasks/999"},
-  {"name": "list users", "method": "GET", "path": "/users"},
-  {"name": "get user", "method": "GET", "path": "/users/1"},
-  {"name": "get missing user", "method": "GET", "path": "/users/999"},
-  {"name": "create user", "method": "POST", "path": "/users", "body": {"name": "Ana Lima", "email": "ana@email.com", "password": "segredo1", "role": "user"}},
-  {"name": "create user duplicate email", "method": "POST", "path": "/users", "body": {"name": "Ana 2", "email": "ana@email.com", "password": "segredo1"}},
-  {"name": "create user bad email", "method": "POST", "path": "/users", "body": {"name": "X", "email": "nao-e-email", "password": "segredo1"}},
-  {"name": "create user bad role", "method": "POST", "path": "/users", "body": {"name": "X", "email": "x@email.com", "password": "segredo1", "role": "root"}},
-  {"name": "update user", "method": "PUT", "path": "/users/4", "body": {"name": "Ana Lima Souza", "role": "manager"}},
-  {"name": "user tasks", "method": "GET", "path": "/users/1/tasks"},
-  {"name": "login ok", "method": "POST", "path": "/login", "body": {"email": "joao@email.com", "password": "1234"}},
-  {"name": "login new user", "method": "POST", "path": "/login", "body": {"email": "ana@email.com", "password": "segredo1"}},
-  {"name": "login wrong password", "method": "POST", "path": "/login", "body": {"email": "joao@email.com", "password": "errada"}},
-  {"name": "delete user", "method": "DELETE", "path": "/users/4"},
-  {"name": "delete missing user", "method": "DELETE", "path": "/users/999"},
-  {"name": "summary report", "method": "GET", "path": "/reports/summary"},
-  {"name": "user report", "method": "GET", "path": "/reports/user/1"},
-  {"name": "missing user report", "method": "GET", "path": "/reports/user/999"},
-  {"name": "list categories", "method": "GET", "path": "/categories"},
-  {"name": "create category", "method": "POST", "path": "/categories", "body": {"name": "Docs", "description": "Documentacao", "color": "#123456"}},
-  {"name": "create category no name", "method": "POST", "path": "/categories", "body": {"description": "sem nome"}},
-  {"name": "update category", "method": "PUT", "path": "/categories/5", "body": {"name": "Documentation"}},
-  {"name": "update missing category", "method": "PUT", "path": "/categories/999", "body": {"name": "x"}},
-  {"name": "delete category", "method": "DELETE", "path": "/categories/5"},
-  {"name": "delete missing category", "method": "DELETE", "path": "/categories/999"}
+ {
+  "name": "index",
+  "method": "GET",
+  "path": "/",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "health",
+  "method": "GET",
+  "path": "/health",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "list tasks",
+  "method": "GET",
+  "path": "/tasks",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "get task",
+  "method": "GET",
+  "path": "/tasks/1",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "get missing task",
+  "method": "GET",
+  "path": "/tasks/999",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "search tasks",
+  "method": "GET",
+  "path": "/tasks/search?q=login&status=in_progress",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "search by priority and user",
+  "method": "GET",
+  "path": "/tasks/search?priority=1&user_id=1",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "task stats",
+  "method": "GET",
+  "path": "/tasks/stats",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "create task",
+  "method": "POST",
+  "path": "/tasks",
+  "body": {
+   "title": "Nova task de teste",
+   "description": "via smoke",
+   "priority": 2,
+   "user_id": 1,
+   "category_id": 1,
+   "due_date": "2030-01-15",
+   "tags": [
+    "smoke",
+    "test"
+   ]
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "create task anonymous",
+  "method": "POST",
+  "path": "/tasks",
+  "body": {
+   "title": "Sem token"
+  },
+  "expect": 401
+ },
+ {
+  "name": "create task short title",
+  "method": "POST",
+  "path": "/tasks",
+  "body": {
+   "title": "ab"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "create task bad status",
+  "method": "POST",
+  "path": "/tasks",
+  "body": {
+   "title": "Status ruim",
+   "status": "flying"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "create task bad priority",
+  "method": "POST",
+  "path": "/tasks",
+  "body": {
+   "title": "Prioridade ruim",
+   "priority": 9
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "create task unknown user",
+  "method": "POST",
+  "path": "/tasks",
+  "body": {
+   "title": "Usuario inexistente",
+   "user_id": 999
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "create task bad date",
+  "method": "POST",
+  "path": "/tasks",
+  "body": {
+   "title": "Data ruim",
+   "due_date": "31-31-2030"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "update task",
+  "method": "PUT",
+  "path": "/tasks/11",
+  "body": {
+   "status": "done",
+   "priority": 1,
+   "tags": "a,b"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "update task bad status",
+  "method": "PUT",
+  "path": "/tasks/11",
+  "body": {
+   "status": "flying"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "update missing task",
+  "method": "PUT",
+  "path": "/tasks/999",
+  "body": {
+   "status": "done"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "delete task",
+  "method": "DELETE",
+  "path": "/tasks/11",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "delete missing task",
+  "method": "DELETE",
+  "path": "/tasks/999",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "list users",
+  "method": "GET",
+  "path": "/users",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "get user",
+  "method": "GET",
+  "path": "/users/1",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "get missing user",
+  "method": "GET",
+  "path": "/users/999",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "create user",
+  "method": "POST",
+  "path": "/users",
+  "body": {
+   "name": "Ana Lima",
+   "email": "ana@email.com",
+   "password": "segredo1",
+   "role": "user"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "create user duplicate email",
+  "method": "POST",
+  "path": "/users",
+  "body": {
+   "name": "Ana 2",
+   "email": "ana@email.com",
+   "password": "segredo1"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "create user bad email",
+  "method": "POST",
+  "path": "/users",
+  "body": {
+   "name": "X",
+   "email": "nao-e-email",
+   "password": "segredo1"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "create user bad role",
+  "method": "POST",
+  "path": "/users",
+  "body": {
+   "name": "X",
+   "email": "x@email.com",
+   "password": "segredo1",
+   "role": "root"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "update user",
+  "method": "PUT",
+  "path": "/users/4",
+  "body": {
+   "name": "Ana Lima Souza",
+   "role": "manager"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "user tasks",
+  "method": "GET",
+  "path": "/users/1/tasks",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "login ok",
+  "method": "POST",
+  "path": "/login",
+  "body": {
+   "email": "joao@email.com",
+   "password": "1234"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "login new user",
+  "method": "POST",
+  "path": "/login",
+  "body": {
+   "email": "ana@email.com",
+   "password": "segredo1"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "login wrong password",
+  "method": "POST",
+  "path": "/login",
+  "body": {
+   "email": "joao@email.com",
+   "password": "errada"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "delete user",
+  "method": "DELETE",
+  "path": "/users/4",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "delete missing user",
+  "method": "DELETE",
+  "path": "/users/999",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "delete user anonymous",
+  "method": "DELETE",
+  "path": "/users/1",
+  "expect": 401
+ },
+ {
+  "name": "summary report",
+  "method": "GET",
+  "path": "/reports/summary",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "user report",
+  "method": "GET",
+  "path": "/reports/user/1",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "missing user report",
+  "method": "GET",
+  "path": "/reports/user/999",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "list categories",
+  "method": "GET",
+  "path": "/categories",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "create category",
+  "method": "POST",
+  "path": "/categories",
+  "body": {
+   "name": "Docs",
+   "description": "Documentacao",
+   "color": "#123456"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "create category no name",
+  "method": "POST",
+  "path": "/categories",
+  "body": {
+   "description": "sem nome"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "update category",
+  "method": "PUT",
+  "path": "/categories/5",
+  "body": {
+   "name": "Documentation"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "update missing category",
+  "method": "PUT",
+  "path": "/categories/999",
+  "body": {
+   "name": "x"
+  },
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "delete category",
+  "method": "DELETE",
+  "path": "/categories/5",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ },
+ {
+  "name": "delete missing category",
+  "method": "DELETE",
+  "path": "/categories/999",
+  "headers": {
+   "X-Admin-Token": "smoke-admin-token"
+  }
+ }
 ]
